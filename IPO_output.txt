@@ -1,0 +1,12 @@
+library(xcms)
+
+library(Rmpi)
+
+xset <- xcmsSet(method="centWave", 
+                  peakwidth=c(7.5, 28.4), ppm=20, noise=0, snthresh=10, mzdiff=0.00285, prefilter=c(3, 100), mzCenterFun="wMean", integrate=1, fitgauss=FALSE, verbose.columns=FALSE, nSlaves=4)
+xset <- retcor(xset, method="obiwarp",
+                  plottype="none", distFunc="cor_opt", profStep=1, center=3, response=1, gapInit=0.4, gapExtend=2.7, factorDiag=2, factorGap=1, localAlignment=0)
+xset <- group(xset, method="density", 
+                bw=12.4, mzwid=0.009, minfrac=0.844, minsamp=1, max=50)
+
+xset <- fillPeaks(xset, nSlaves=4)
